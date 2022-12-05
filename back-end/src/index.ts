@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import { Router, Request, Response } from "express";
 import { avatarRouter } from "../src/database/avatar.router";
 import cors from "cors";
+import path from "path";
 
 dotenv.config();
 
@@ -16,6 +17,8 @@ const app = express();
 
 const route: Router = Router();
 
+app.use("/file", express.static(path.resolve("public", "upload", "users")));
+
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
@@ -25,7 +28,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use(express.json());
-app.use('/upload-image', avatarRouter)
+app.use("/upload-image", avatarRouter);
+app.use("/get-last-avatar", avatarRouter)
+app.use("/remove-all", avatarRouter)
 app.use(route);
 
 app.listen(PORT, () => {
